@@ -32,6 +32,9 @@ Things to be added :
     # 287fd0
     # 186fd0
 '''
+
+input("1")
+
 w = 800
 h = 600
 main_folder = "Diary_Entries-SDE"
@@ -42,6 +45,8 @@ original_path = os.getcwd()
 original_path_1 = original_path
 Application_Name = "Journal SDE 1.5.0"
 # Later used while saving the diary entries
+
+input("2")
 
 
 # Fonts ---------
@@ -81,6 +86,7 @@ spells_dict = {
 
 widgets = {}
 
+input("3")
 
 def load_spells_file():
     global spells_dict
@@ -1294,5 +1300,7 @@ def intro():
 
     intro_root.mainloop()
 
-
+input("4")
 intro()
+
+
