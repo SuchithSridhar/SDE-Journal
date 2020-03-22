@@ -14,13 +14,6 @@ from src.ConvergeEntries import write_new_file, SDE_files
 from src.Encryption import encrypt, decrypt, make_code, WeakCodeError
 
 
-'''
-Things to be added :
-
-- The editing the spell_dict after user enters new dict.
-
-'''
-
 # ------------------- Loading of the application -------------------------
 
 
@@ -38,19 +31,17 @@ h = 600
 main_folder = "Diary_Entries-SDE"
 current_date = ''
 base_color = '#4d94ff'
-text_base = base_color  # D1EEEE'
+text_base = base_color 
 original_path = os.getcwd()
 original_path_1 = original_path
 Application_Name = "Journal SDE 1.5.0"
 # Later used while saving the diary entries
 
 
-
 # Fonts ---------
 FONT = ("Verdana", 12)
 FONT_BOLD = ("Verdana bold", 12)
-# FONT1 = ("Arial", 12)
-# FONT2 = ("Comic Sans MS", 22)
+
 
 date_font = ("Verdana", 17)
 calender_font = FONT
@@ -61,11 +52,6 @@ opts_label_font = ("Verdana bold", 14)
 
 code = 0
 user = ''
-
-# -------------------- test values
-
-# code = 1212
-# user = 'Testing-SDE'
 
 
 # ----- Spell check dict ----
@@ -103,9 +89,9 @@ def save_spells_file():
 # ---------------------------
 
 
-upper_bg = '#0066ff'  # "#a31aff"
-cal_bg = '#002966'  # '#2e004d'
-cal_text = '#005ce6'  # '#c266ff'
+upper_bg = '#0066ff'  
+cal_bg = '#002966'  
+cal_text = '#005ce6'
 ex_text = '''potbnijeg8ufhvbivjsbdgof'''
 
 cal_variable = None
