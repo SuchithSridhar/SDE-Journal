@@ -28,7 +28,7 @@ from src.Encryption import encrypt, decrypt, make_code, WeakCodeError
 
 w = 800
 h = 600
-main_folder = "Diary_Entries-SDE"
+main_folder = "~/.Diary_Entries-SDE"
 current_date = ''
 base_color = '#4d94ff'
 text_base = base_color 
