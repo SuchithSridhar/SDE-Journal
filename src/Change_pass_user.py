@@ -1,6 +1,6 @@
 # Change password or username
 
-import Encryption 
+from . import Encryption 
 # encrypt, decrypt, make_code, WeakCodeError : encrypt(data, int(code))
 
 import os

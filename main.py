@@ -8,10 +8,10 @@ import time
 import random
 import pickle
 import traceback
-import Change_pass_user
-from Open_drive import save_to_drive, open_file
-from ConvergeEntries import write_new_file, SDE_files
-from Encryption import encrypt, decrypt, make_code, WeakCodeError
+from src import Change_pass_user
+from src.Open_drive import save_to_drive, open_file
+from src.ConvergeEntries import write_new_file, SDE_files
+from src.Encryption import encrypt, decrypt, make_code, WeakCodeError
 
 
 '''
@@ -125,9 +125,9 @@ def preset_window(app_window):
 
     with FolderManager(original_path_1):
         try:
-            app_window.iconbitmap(resource_path('Diary_icon.ico'))
+            app_window.iconbitmap(resource_path('res/Diary_icon.ico'))
         except tk.TclError:
-            app_window.tk.call('wm', 'iconphoto', app_window._w, tk.PhotoImage(file='Diary_icon.png'))
+            app_window.tk.call('wm', 'iconphoto', app_window._w, tk.PhotoImage(file='res/Diary_icon.png'))
 
     app_window.title(Application_Name)
     app_window.focus()
@@ -1256,7 +1256,6 @@ def main_dir_check():
 
 
 def intro():
-    print(os.getcwd())
     # --- host the intro intro_root ---
     intro_root = tk.Tk()
     intro_root.geometry("300x150")
