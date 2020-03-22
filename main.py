@@ -33,6 +33,9 @@ main_folder = ".Diary_Entries-SDE"
 if os.name == "posix":
     main_folder = os.path.join(os.path.expanduser("~"), main_folder)
 
+    x = os.path.split(str(__file__))[0]
+    os.chdir(x)
+
 current_date = ''
 base_color = '#4d94ff'
 text_base = base_color 
