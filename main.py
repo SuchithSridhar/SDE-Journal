@@ -33,8 +33,6 @@ Things to be added :
     # 186fd0
 '''
 
-input("1")
-
 w = 800
 h = 600
 main_folder = "Diary_Entries-SDE"
@@ -46,7 +44,6 @@ original_path_1 = original_path
 Application_Name = "Journal SDE 1.5.0"
 # Later used while saving the diary entries
 
-input("2")
 
 
 # Fonts ---------
@@ -85,8 +82,8 @@ spells_dict = {
 }
 
 widgets = {}
+CURRENT_PAGE = None
 
-input("3")
 
 def load_spells_file():
     global spells_dict
@@ -127,7 +124,10 @@ def preset_window(app_window):
     center(app_window)
 
     with FolderManager(original_path_1):
-        app_window.iconbitmap(resource_path('Diary_icon.ico'))
+        try:
+            app_window.iconbitmap(resource_path('Diary_icon.ico'))
+        except tk.TclError:
+            app_window.tk.call('wm', 'iconphoto', app_window._w, tk.PhotoImage(file='Diary_icon.png'))
 
     app_window.title(Application_Name)
     app_window.focus()
@@ -1256,7 +1256,7 @@ def main_dir_check():
 
 
 def intro():
-    os.chmod(os.getcwd(), 0o444)
+    print(os.getcwd())
     # --- host the intro intro_root ---
     intro_root = tk.Tk()
     intro_root.geometry("300x150")
@@ -1300,7 +1300,7 @@ def intro():
 
     intro_root.mainloop()
 
-input("4")
+
 intro()
 
 
