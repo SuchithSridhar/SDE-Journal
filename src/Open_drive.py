@@ -15,14 +15,15 @@ def zip_files(zip_file_name, file_paths):
             for file in file_paths:
                 zipping.write(file)
     except Exception as e:
-        print("------- Exception while zipping !\n\n\n")
+        # print("------- Exception while zipping !\n\n\n")
         raise e
 
 
 def open_drive():
     url = r'https://drive.google.com/drive/my-drive'
     chrome_app = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-    chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s --incognito'
+    chrome_path = ('C:/Program Files (x86)/Google/Chrome/Application\
+        /chrome.exe %s --incognito')
     if os.path.isfile(chrome_app):
         webbrowser.get(chrome_path).open_new(url)
     else:
@@ -41,19 +42,21 @@ def save_to_drive():
 
     try:
         os.makedirs(dirname)
-    except:
+    except Exception:
         pass
 
     try:
         zip_files(os.path.join(dirname, "SDE-Backup.zip"), zipping)
     except Exception as e:
-        print("Unable to zip files properly")
-        print(e)
+        pass
+        # print("Unable to zip files properly")
+        # print(e)
     try:
         open_drive()
     except Exception as e:
-        print("Unable to open drive properly")
-        print(e)
+        pass
+        # print("Unable to open drive properly")
+        # print(e)
     time.sleep(1)
     open_file(os.path.join(original_path, dirname))
 
@@ -62,9 +65,10 @@ def open_file(filename):
     try:
         os.startfile(filename)
     except Exception as e:
-        print("No folder in path 1 of opening")
+        # print("No folder in path 1 of opening")
         try:
             opener = "open" if sys.platform == "darwin" else "xdg-open"
             subprocess.call([opener, filename])
-        except:
-            print("Not able to open folder using path 2!")
+        except Exception:
+            pass
+            # print("Not able to open folder using path 2!")

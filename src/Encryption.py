@@ -1,3 +1,6 @@
+from . import sdeExceptions
+
+
 random_number = int('3141592653589793238462643383279502' +
                     '8841971693993751058209749445923078' +
                     '16406286208998628034825342117067')
@@ -8,7 +11,8 @@ def asciidata(data):
     for i in data:
         val = ord(i)
         if (val > 126 or val < 9) and not val == 5:
-            print("Character passed -->", val)
+            pass
+            # print("Character passed -->", val)
         else:
             datanew += i
 
@@ -27,11 +31,11 @@ def encrypt_decrypt(text, code, action, skip=0):
     code = [int(i) for i in list(str(code))]
 
     new = ""
-    l = len(code)
+    length = len(code)
     for i in range(len(text)):
         letter = text[i]
         if ord(letter) >= 32:
-            letter = ord(letter) + action * code[(i + skip) % l]
+            letter = ord(letter) + action * code[(i + skip) % length]
             # ASCII code after 127 is basically not defined for general
             # uses.
             if letter < 32:
@@ -49,7 +53,7 @@ def encrypt_decrypt(text, code, action, skip=0):
         if ord(letter) == 5 and action < 0:
             letter = "\n"
 
-        # print([text[i]],"---->",[letter], "by", action*code[i%l])
+        # print([text[i]],"---->",[letter], "by", action*code[i%length])
         new += letter
     return new
 
@@ -65,7 +69,7 @@ def decrypt(text, code):
 def formted_methods(raw, code, action):
     action = action.lower()
     if action not in ('d', 'e'):
-        raise Exception
+        raise sdeExceptions.InvalidAction
     raw = raw.lstrip()
     if raw[:6] == "00es00":
         encrypted = True
@@ -103,18 +107,14 @@ def add_pretext(text):
     return s + "\n" + ini + text
 
 
-class WeakCodeError(Exception):
-    pass
-
-
 def make_code(code):
     try:
         code = int(code)
         if len(str(code)) > 20 or len(str(code)) < 4:
-            raise WeakCodeError
+            raise sdeExceptions.WeakCodeError
         if code % 100 == 0:
-            raise WeakCodeError
+            raise sdeExceptions.WeakCodeError
         return code
 
     except ValueError:
-        raise ValueError
+        raise sdeExceptions.AlphaCodeError

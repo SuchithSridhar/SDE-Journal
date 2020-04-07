@@ -52,7 +52,8 @@ def write_new_file(files, function=blank,
                         flag = True
                         break
 
-                    if "datfile" not in files[file_no] and 'spellcheck' not in files[file_no]:
+                    if ("datfile" not in files[file_no] and
+                            'spellcheck' not in files[file_no]):
                         count += f.write("\n")
                         count += f.write("-"*50)
                         name = os.path.basename(files[file_no])
