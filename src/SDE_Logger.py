@@ -1,4 +1,5 @@
 
+debug = "DEBUG"
 info = "INFO"
 warn = "WARNING"
 critical = "CRITICAL"

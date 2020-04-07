@@ -1,5 +1,6 @@
 import os
 import time
+import pickle
 import traceback
 import tkinter as tk
 from tkinter import ttk
@@ -307,8 +308,6 @@ class MainPage(tk.Frame):
 
         self.root.text_box = text
         # This is done since this used in a more than just this place
-
-        self.root.spells_dict = text.spells_dict
 
         self.widgets["TEXT"] = text
         s.config(command=text.yview)
@@ -633,7 +632,7 @@ class OptionsPage(tk.Frame):
 
         def spell_check_opts():
 
-            spells_dict = self.root.spells_dict
+            spells_dict = self.root.text_box.spells_dict
 
             def insert_spells():
                 logger.log("Inserting spells")
@@ -666,7 +665,7 @@ class OptionsPage(tk.Frame):
                         spells_new_dict[spell_corrects[0].strip()
                                         ] = spell_corrects[1].strip()
 
-                    spells_dict = spells_new_dict
+                    self.root.text_box.spells_dict = spells_new_dict
 
                 except Exception as e:
                     self.root.pop_up("Close", 'Wrong Format')

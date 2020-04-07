@@ -11,14 +11,14 @@ class Textpad(tk.Text):
         tk.Text.__init__(self, frame, *args, **kwargs)
         self.frame = frame
         self.code = code
-        self.spells_dict = const.SPELLS_DICT.copy()
+        self.load_spells_file()
 
     def load_spells_file(self):
         try:
             with open(const.SPELL_CHECK_FILE, 'rb') as file:
                 self.spells_dict = pickle.load(file)
         except FileNotFoundError:
-            pass
+            self.spells_dict = const.SPELLS_DICT.copy()
 
     def save_spells_file(self):
         with open(const.SPELL_CHECK_FILE, 'wb') as pickel_out:
