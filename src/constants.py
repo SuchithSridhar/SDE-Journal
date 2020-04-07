@@ -1,9 +1,12 @@
 import os
+import sys
 
 BASE_COLOR = '#4d94ff'
 TEXT_BASE_COLOR = BASE_COLOR
 BASE_PATH = os.getcwd()
-APPLICATION_NAME = "Journal SDE 1.5.0"
+
+APP_PATH = "/".join(__file__.split("/")[:-2])
+APPLICATION_NAME = "Journal SDE 1.5.1"
 # Later used while saving the diary entries
 
 

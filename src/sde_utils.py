@@ -18,7 +18,7 @@ def resource_path(relative_path):
 
 
 def get_icon_file():
-    with fm.FolderManager(const.BASE_PATH):
+    with fm.FolderManager(const.APP_PATH):
         if os.name == "posix":
             x = resource_path("res/Diary_icon.png")
         else:
