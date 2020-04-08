@@ -290,31 +290,44 @@ class MainPage(tk.Frame):
 
     def set_right_frame(self):
 
-        s = tk.Scrollbar(self, orient=tk.VERTICAL)
-        # Setting a scroll bar in case needed
+        def set_pics_frame():
+            top_label = tk.Label(
+                pics_frame,
+                text="Pictues:",
+                bg=const.UPPER_BG,
+                fg='white',
+                font=const.OPTS_FONT
+            )
 
-        text = TextPad.Textpad(self,
+            top_label.place()
+            self.widgets["TOPLABEL"] = top_label
+
+        text_frame = tk.Frame(self)
+        pics_frame = tk.Frame(self)
+        set_pics_frame()
+
+        s = tk.Scrollbar(text_frame, orient=tk.VERTICAL)
+
+        text_frame.config(bg=const.BASE_COLOR)
+        text = TextPad.Textpad(text_frame,
                                code=self.root.user.code,
                                wrap=tk.WORD,
                                yscrollcommand=s.set)
-        # The height and width is based on the font-size and not pixels
-        # It has word wrap functionality added onto it.
 
         text.config(font=const.TEXT_BOX_FONT)
-        text.place(x=const.DEFAULT_WIDTH // 2, y=2,
-                   w=const.DEFAULT_WIDTH // 2 - 18,
-                   h=const.DEFAULT_HEIGHT - 4)
-        text.focus()
-
-        self.root.text_box = text
-        # This is done since this used in a more than just this place
-
-        self.widgets["TEXT"] = text
         s.config(command=text.yview)
-        # Setting what the scroll bar scrolls
-        # The scroll bar is pointless if not set
 
-        s.place(x=const.DEFAULT_WIDTH - 17, y=0, height=const.DEFAULT_HEIGHT)
+        pics_frame.place()
+        text_frame.place()
+        text.place()
+        s.place()
+
+        text.focus()
+        self.root.text_box = text
+
+        self.widgets["PICSFRAME"] = pics_frame
+        self.widgets["TEXTFRAME"] = text_frame
+        self.widgets["TEXT"] = text
         self.widgets["SCROLL"] = s
 
     def set_left_frame(self):
@@ -417,6 +430,14 @@ class MainPage(tk.Frame):
             self.cal.add_markings()
             text_box.load_file(self.file_date)
 
+        def pics_button_frunction():
+            text_button_frame.tkraise()
+            self.widgets["PICSFRAME"].tkraise()
+
+        def text_button_function():
+            pics_button_frame.tkraise()
+            self.widgets["TEXTFRAME"].tkraise()
+
         def last_func():
             # The function performed just before closing the window
             try:
@@ -459,32 +480,48 @@ class MainPage(tk.Frame):
 
         refresh_but = ttk.Button(self, text="Refresh")
         refresh_but.config(command=set_notepad)
-        refresh_but.place(x=25, y=470, w=170, h=50)
+        refresh_but.place()
         self.widgets["REF"] = refresh_but
 
         notes_but = ttk.Button(self, text="Notes")
         notes_but.config(command=notes_func)
-        notes_but.place(x=205, y=470, w=170, h=50)
+        notes_but.place()
         self.widgets["NOTE"] = notes_but
+
+        pics_button_frame = tk.Frame(self)
+        pics_button_frame.place()
+
+        text_button_frame = tk.Frame(self)
+        text_button_frame.place()
+
+        pics_button = ttk.Button(pics_button_frame, text="Pictures")
+        pics_button.config(command=pics_button_frunction)
+        pics_button.pack(fill=tk.BOTH, expand=True)
+        self.widgets["PICSBUTTONFRAME"] = pics_button_frame
+
+        text_button = ttk.Button(text_button_frame, text="Entry")
+        text_button.config(command=text_button_function)
+        text_button.pack(fill=tk.BOTH, expand=True)
+        self.widgets["TEXTBUTTONFRAME"] = text_button_frame
 
         options_button = ttk.Button(self, text="Options")
         options_button.config(command=options_page)
-        options_button.place(x=110, y=530, w=150 + 30, h=50)
+        options_button.place()
         self.widgets["OPTS"] = options_button
 
         next_button = ttk.Button(self, text="Next")
         next_button.config(command=next_page)
-        next_button.place(x=300, y=530, w=50, h=50)
+        next_button.place()
         self.widgets["NEXT"] = next_button
 
         prev_button = ttk.Button(self, text="Prev")
         prev_button.config(command=prev_page)
-        prev_button.place(x=50, y=530, w=50, h=50)
+        prev_button.place()
         self.widgets["PREV"] = prev_button
 
         today_button = ttk.Button(self, text="Today")
         today_button.config(command=self.cal.make_today)
-        today_button.place(x=275, y=115, w=100, h=25)
+        today_button.place()
         self.widgets["TDAY"] = today_button
 
         # This is the Dark purple bar that is created of design purposes
@@ -498,14 +535,16 @@ class MainPage(tk.Frame):
         label.place(x=10, y=40)
         self.widgets["DATE"] = label
 
+        text_button_function()
         set_notepad()
 
     def resize_widgets(self, w, h):
         # Right-side
         wrap = w * 0.4
 
-        x1r = 0.45
-        x2r = 0.55
+        x_percentage = 45
+        x1r = x_percentage/100
+        x2r = 1 - x1r
 
         y1r = 0.2
         y2r = 0.6
@@ -514,11 +553,29 @@ class MainPage(tk.Frame):
         th = 0.04  # today button ratio
         tw = 0.1
 
-        self.widgets["TEXT"].place(x=w * x1r, y=0,
-                                   # 0.6 - 60%, -5 for scroll bar
-                                   w=int(w * x2r) - 15,
-                                   h=int(h))
-        self.widgets["SCROLL"].place(x=w - 15, y=0, h=h)
+        self.widgets["TEXTFRAME"].place(
+            x=w * x1r, y=0,
+            w=int(w * x2r),
+            h=int(h)
+        )
+        self.widgets["PICSFRAME"].place(
+            x=w * x1r, y=0,
+            w=int(w * x2r),
+            h=int(h)
+        )
+        self.widgets["TOPLABEL"].place(
+            x=0, y=0,
+            w=int(w * x2r),
+            h=int(h*0.10)
+        )
+
+        # with respect to frame
+        self.widgets["TEXT"].place(
+            x=0, y=0,
+            w=int(w * x2r) - 15,
+            h=int(h)
+        )
+        self.widgets["SCROLL"].place(x=int(w * x2r) - 15, y=0, h=h)
 
         # Left-side
         self.widgets["UBG"].place(x=0, y=0,
@@ -545,14 +602,34 @@ class MainPage(tk.Frame):
                                   w=int(w * x1r) - buf,
                                   h=int(h * (y2r - (th + 0.01))))
 
+        width_buttons = int((((w * x1r) / 3)*0.9))
+        height_buttons = int(h * (y3r / 2) - 10)
+
         math = ((w * x1r) / 2) - ((w * x1r) * 0.9 / 2) - (buf / 2)
-        self.widgets["REF"].place(x=math, y=(h * (y2r + y1r)) + (buf / 2),
-                                  w=int((w * x1r) * 0.9 / 2),
-                                  h=int(h * (y3r / 2) - 10))
-        math = ((w * x1r) / 2) + (buf / 2)
-        self.widgets["NOTE"].place(x=math, y=(h * (y2r + y1r)) + (buf / 2),
-                                   w=int((w * x1r) * 0.9 / 2),
-                                   h=int(h * (y3r / 2) - 10))
+        self.widgets["REF"].place(
+            x=math, y=(h * (y2r + y1r)) + (buf / 2),
+            w=width_buttons,
+            h=height_buttons
+        )
+
+        math = math + width_buttons + (buf/2)
+        self.widgets["NOTE"].place(
+            x=math, y=(h * (y2r + y1r)) + (buf / 2),
+            w=width_buttons,
+            h=height_buttons
+        )
+
+        math = math + width_buttons + (buf/2)
+        self.widgets["PICSBUTTONFRAME"].place(
+            x=math, y=(h * (y2r + y1r)) + (buf/2),
+            w=width_buttons,
+            h=height_buttons
+        )
+        self.widgets["TEXTBUTTONFRAME"].place(
+            x=math, y=(h * (y2r + y1r)) + (buf/2),
+            w=width_buttons,
+            h=height_buttons
+        )
 
         math = ((w * x1r) / 2) - (w * x1r * 0.5) / 2
         self.widgets["OPTS"].place(x=math,
@@ -560,12 +637,12 @@ class MainPage(tk.Frame):
                                       (h * (y3r / 2) - 10)) + (buf),
                                    w=int(w * x1r * 0.5),
                                    h=int(h * (y3r / 2) - 10))
-        self.widgets["PREV"].place(x=math - buf - (w * x1r * 0.15),
+        self.widgets["PREV"].place(x=math - buf/2 - (w * x1r * 0.15),
                                    y=(h * (y2r + y1r) +
                                       (h * (y3r / 2) - 10)) + (buf),
                                    w=int(w * x1r * 0.15),
                                    h=int(h * (y3r / 2) - 10))
-        self.widgets["NEXT"].place(x=math + buf + (w * x1r * 0.5),
+        self.widgets["NEXT"].place(x=math + buf/2 + (w * x1r * 0.5),
                                    y=(h * (y2r + y1r) +
                                       (h * (y3r / 2) - 10)) + (buf),
                                    w=int(w * x1r * 0.15),
