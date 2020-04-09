@@ -1,6 +1,8 @@
 import os
+import io
 import tkinter as tk
 from tkinter import ttk
+from PIL import Image, ImageTk
 from . import constants as const
 from . import foldermanager as fm
 from . import ScrollableFrame
@@ -9,6 +11,7 @@ from . import ScrollableFrame
 class Pictures:
     def __init__(self, frame):
         self.frame = frame
+        self.page = 'front'
         self.folder = "Assets"
         self.mainlabel = tk.Label(self.frame, text="Pictures on this day:")
         self.mainlabel.configure(bg=const.UPPER_BG,
@@ -22,17 +25,46 @@ class Pictures:
         self.buttons_frame.configure(style="new.TFrame")
         self.but_frame_holder.canvas.configure(bg=const.BASE_COLOR)
 
+        self.canvas_frame = tk.Frame(self.frame)
+        self.canvas = tk.Canvas(self.canvas_frame)
+        self.canvas.pack(fill=tk.BOTH)
+
         def load():
-            print(self.var.get())
+            if self.page != "front":
+                return None
+
+            if self.var.get() == "None":
+                return None
+
+            self.canvas_frame.tkraise()
+
+            with fm.FolderManager(self.folder):
+                with open(self.var.get(), 'rb') as f:
+                    data = f.read()
+
+            image = Image.open(io.BytesIO(data))
+            image = ImageTk.PhotoImage(image)
+            self.canvas.create_image(x=0, y=0, image=image, anchor="nw")
 
         def delete():
-            pass
+            if self.page != "front":
+                return None
 
         def picture():
-            pass
+            if self.page != "front":
+                return None
 
         def draw():
-            pass
+            if self.page != "front":
+                return None
+            self.canvas_frame.tkraise()
+            self.page = "canvas"
+
+        def back():
+            if self.page == "front":
+                return None
+            self.but_frame_holder.tkraise()
+            self.page = "front"
 
         self.load_but = ttk.Button(
             self.frame, text="Load", command=load)
@@ -42,6 +74,8 @@ class Pictures:
             self.frame, text="Add", command=picture)
         self.draw_but = ttk.Button(
             self.frame, text="Draw", command=draw)
+        self.back_but = ttk.Button(
+            self.frame, text="Back", command=back)
 
         self.buttons = []
         self.labels = []
@@ -50,6 +84,7 @@ class Pictures:
         self.h = 0
 
         self.mainlabel.place()
+        self.but_frame_holder.tkraise()
 
     def resize(self, w, h):
         self.w = w
@@ -68,6 +103,9 @@ class Pictures:
         self.but_frame_holder.place(
             x=start_x, y=start_y, w=w-(x_buff*2), h=h*0.69
         )
+        self.canvas_frame.place(
+            x=start_x, y=start_y, w=w-(x_buff*2), h=h*0.69
+        )
 
         for button in self.buttons:
             # button.place(x=start_x, y=start_y,
@@ -81,22 +119,29 @@ class Pictures:
 
         x_math = w/2 - button_width - x_buff
         y_math = start_y + h*0.69 + y_buff
-        self.load_but.place(x=x_math, y=y_math,
+        self.draw_but.place(x=x_math, y=y_math,
                             w=button_width, h=button_height)
-
-        x_math = w/2 - button_width - x_buff
-        y_math = y_math = start_y + h*0.69 + y_buff + y_buff+button_height
-        self.delete_but.place(x=x_math, y=y_math,
-                              w=button_width, h=button_height)
 
         x_math = w/2 + x_buff
         y_math = y_math = start_y + h*0.69 + y_buff
         self.picture_but.place(x=x_math, y=y_math,
                                w=button_width, h=button_height)
 
-        x_math = w/2 + x_buff
+        button_width = button_width*2/3
+
+        x_math = w/2.75 - button_width - x_buff
+        y_math = y_math = start_y + h*0.69 + y_buff + y_buff+button_height
+        self.load_but.place(x=x_math, y=y_math,
+                            w=button_width, h=button_height)
+
+        x_math = x_math + button_width + x_buff
         y_math = y_math = start_y + h*0.69 + y_buff + y_buff + button_height
-        self.draw_but.place(x=x_math, y=y_math,
+        self.delete_but.place(x=x_math, y=y_math,
+                              w=button_width, h=button_height)
+
+        x_math = x_math + button_width + x_buff
+        y_math = y_math = start_y + h*0.69 + y_buff + y_buff + button_height
+        self.back_but.place(x=x_math, y=y_math,
                             w=button_width, h=button_height)
 
     def update(self):
