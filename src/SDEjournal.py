@@ -10,7 +10,7 @@ from . import foldermanager as fm
 from . import Encryption as enc
 from . import SDE_Logger as logger
 from . import ConvergeEntries, Change_pass_user, Open_drive, calendarClass
-from . import TextPad, userClass, sde_utils, sdeExceptions
+from . import TextPad, userClass, sde_utils, sdeExceptions, PicturesPage
 
 
 class FakeEvent:
@@ -153,6 +153,7 @@ class IntroPage(tk.Frame):
         # app.style.theme_use("clam") --> can set theme
         root.style.configure('TButton', background=const.UPPER_BG)
         root.style.configure('TButton', foreground='black')
+        root.style.configure('new.TFrame', background=const.BASE_COLOR)
 
         # --- Check or make the main directory and cd to it ---
         sde_utils.cd_base_folder()
@@ -285,26 +286,18 @@ class MainPage(tk.Frame):
         self.switch_folder()
         self.set_right_frame()
         self.set_left_frame()
+
+        # Configure Pictures:
+        self.widgets["PICTURES"].configure(cal_var=self.cal.var)
+
         self.root.geometry(f"{const.DEFAULT_WIDTH}x{const.DEFAULT_HEIGHT}")
         self.root.center()
 
     def set_right_frame(self):
 
-        def set_pics_frame():
-            top_label = tk.Label(
-                pics_frame,
-                text="Pictues:",
-                bg=const.UPPER_BG,
-                fg='white',
-                font=const.OPTS_FONT
-            )
-
-            top_label.place()
-            self.widgets["TOPLABEL"] = top_label
-
-        text_frame = tk.Frame(self)
-        pics_frame = tk.Frame(self)
-        set_pics_frame()
+        text_frame = tk.Frame(self, bg=const.BASE_COLOR)
+        pics_frame = tk.Frame(self, bg=const.BASE_COLOR)
+        pictures = PicturesPage.Pictures(pics_frame)
 
         s = tk.Scrollbar(text_frame, orient=tk.VERTICAL)
 
@@ -327,14 +320,20 @@ class MainPage(tk.Frame):
 
         self.widgets["PICSFRAME"] = pics_frame
         self.widgets["TEXTFRAME"] = text_frame
+        self.widgets["PICTURES"] = pictures
         self.widgets["TEXT"] = text
         self.widgets["SCROLL"] = s
 
     def set_left_frame(self):
 
         def change_day(*args, **kwargs):
+
             logger.log(f"Saving the file: {self.file_date}")
+
             set_notepad()
+            self.day_var.set(self.cal.get_selected_formatted())
+            self.widgets["PICTURES"].update()
+
             logger.log(f"Changed to file: {self.file_date}")
 
         def notes_func():
@@ -421,10 +420,8 @@ class MainPage(tk.Frame):
             logger.log("Calendar set up")
 
         def set_notepad():
-            self.day_var.set(self.cal.get_selected_formatted())
             text_box = self.root.text_box
             text_box.save_data(self.file_date)
-            text_box.delete(1.0, 'end')
 
             self.file_date = self.cal.get_file_date()
             self.cal.add_markings()
@@ -479,7 +476,7 @@ class MainPage(tk.Frame):
         self.cal.var.trace('w', change_day)
 
         refresh_but = ttk.Button(self, text="Refresh")
-        refresh_but.config(command=set_notepad)
+        refresh_but.config(command=change_day)
         refresh_but.place()
         self.widgets["REF"] = refresh_but
 
@@ -563,11 +560,8 @@ class MainPage(tk.Frame):
             w=int(w * x2r),
             h=int(h)
         )
-        self.widgets["TOPLABEL"].place(
-            x=0, y=0,
-            w=int(w * x2r),
-            h=int(h*0.10)
-        )
+
+        self.widgets["PICTURES"].resize(w=int(w * x2r), h=int(h))
 
         # with respect to frame
         self.widgets["TEXT"].place(
