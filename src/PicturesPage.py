@@ -14,9 +14,11 @@ class Pictures:
         self.page = 'front'
         self.folder = "Assets"
         self.mainlabel = tk.Label(self.frame, text="Pictures on this day:")
-        self.mainlabel.configure(bg=const.UPPER_BG,
-                                 font=const.PICS_OPTIONS_FONT,
-                                 fg="white")
+        self.mainlabel.configure(
+            bg=const.UPPER_BG,
+            font=const.PICS_OPTIONS_FONT,
+            fg="white"
+        )
 
         self.but_frame_holder = ScrollableFrame.ScrollableFrame(
             self.frame, style="new.TFrame"
@@ -27,7 +29,8 @@ class Pictures:
 
         self.canvas_frame = tk.Frame(self.frame)
         self.canvas = tk.Canvas(self.canvas_frame)
-        self.canvas.pack(fill=tk.BOTH)
+        self.canvas.place()
+        self.canvas.sde_size = (0, 0)
 
         def load():
             if self.page != "front":
@@ -39,12 +42,15 @@ class Pictures:
             self.canvas_frame.tkraise()
 
             with fm.FolderManager(self.folder):
-                with open(self.var.get(), 'rb') as f:
-                    data = f.read()
+                with open("2020-04-09--Test copy.png", 'rb') as f:
+                    image = Image.open(f)
+                    image = image.resize(self.canvas.sde_size, Image.ANTIALIAS)
+                    image = ImageTk.PhotoImage(image)
 
-            image = Image.open(io.BytesIO(data))
-            image = ImageTk.PhotoImage(image)
-            self.canvas.create_image(x=0, y=0, image=image, anchor="nw")
+            self.canvas.image = image
+            self.canvas.create_image(
+                (0, 0), image=self.canvas.image, anchor="nw")
+            self.canvas.create_line(0, 0, 500, 500)
 
         def delete():
             if self.page != "front":
@@ -106,6 +112,12 @@ class Pictures:
         self.canvas_frame.place(
             x=start_x, y=start_y, w=w-(x_buff*2), h=h*0.69
         )
+        self.canvas.place(
+            x=0, y=0, w=w-(x_buff*2), h=h*0.69
+        )
+        # Fix the size errors occuring by printing the sizes when resizing
+        self.canvas.sde_size = (int(w-(x_buff*2)), int(h*0.69))
+        print(self.canvas.sde_size)
 
         for button in self.buttons:
             # button.place(x=start_x, y=start_y,
