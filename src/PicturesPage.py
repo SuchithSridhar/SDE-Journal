@@ -6,10 +6,11 @@ from PIL import Image, ImageTk
 from . import constants as const
 from . import foldermanager as fm
 from . import ScrollableFrame
+from . import SDECanvas
 
 
 class Pictures:
-    def __init__(self, frame):
+    def __init__(self, frame, code):
         self.frame = frame
         self.page = 'front'
         self.folder = "Assets"
@@ -27,10 +28,12 @@ class Pictures:
         self.buttons_frame.configure(style="new.TFrame")
         self.but_frame_holder.canvas.configure(bg=const.BASE_COLOR)
 
-        self.canvas_frame = tk.Frame(self.frame)
-        self.canvas = tk.Canvas(self.canvas_frame)
+        # self.canvas_frame = tk.Frame(self.frame)
+        self.canvas = SDECanvas.Canvas(self.frame, self.folder, code)
         self.canvas.place()
-        self.canvas.sde_size = (0, 0)
+        # self.canvas = tk.Canvas(self.canvas_frame, folder=self.folder)
+        # self.canvas.place()
+        # self.canvas.sde_size = (0, 0)
 
         def load():
             if self.page != "front":
@@ -39,18 +42,8 @@ class Pictures:
             if self.var.get() == "None":
                 return None
 
-            self.canvas_frame.tkraise()
-
-            with fm.FolderManager(self.folder):
-                with open("2020-04-09--Test copy.png", 'rb') as f:
-                    image = Image.open(f)
-                    image = image.resize(self.canvas.sde_size, Image.ANTIALIAS)
-                    image = ImageTk.PhotoImage(image)
-
-            self.canvas.image = image
-            self.canvas.create_image(
-                (0, 0), image=self.canvas.image, anchor="nw")
-            self.canvas.create_line(0, 0, 500, 500)
+            self.canvas.load(self.var.get())
+            self.canvas.raiseframe()
 
         def delete():
             if self.page != "front":
@@ -63,7 +56,7 @@ class Pictures:
         def draw():
             if self.page != "front":
                 return None
-            self.canvas_frame.tkraise()
+            self.canvas.raiseframe()
             self.page = "canvas"
 
         def back():
@@ -109,22 +102,16 @@ class Pictures:
         self.but_frame_holder.place(
             x=start_x, y=start_y, w=w-(x_buff*2), h=h*0.69
         )
-        self.canvas_frame.place(
+        self.canvas.place(
             x=start_x, y=start_y, w=w-(x_buff*2), h=h*0.69
         )
-        self.canvas.place(
-            x=0, y=0, w=w-(x_buff*2), h=h*0.69
-        )
-        # Fix the size errors occuring by printing the sizes when resizing
-        self.canvas.sde_size = (int(w-(x_buff*2)), int(h*0.69))
-        print(self.canvas.sde_size)
 
         for button in self.buttons:
-            # button.place(x=start_x, y=start_y,
-            #              h=button_height, w=w-(x_buff*2)-15)
-            button.pack(fill=tk.X, pady=y_buff, padx=x_buff/2,
-                        ipadx=internal_padx, ipady=internal_pady,
-                        expand=True, anchor=tk.CENTER)
+            button.pack(
+                fill=tk.X, pady=y_buff, padx=x_buff/2,
+                ipadx=internal_padx, ipady=internal_pady,
+                expand=True, anchor=tk.CENTER
+            )
 
         button_height = h*0.2/2.5
         button_width = w/2.5

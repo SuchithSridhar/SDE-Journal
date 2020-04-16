@@ -297,7 +297,7 @@ class MainPage(tk.Frame):
 
         text_frame = tk.Frame(self, bg=const.BASE_COLOR)
         pics_frame = tk.Frame(self, bg=const.BASE_COLOR)
-        pictures = PicturesPage.Pictures(pics_frame)
+        pictures = PicturesPage.Pictures(pics_frame, self.root.code)
 
         s = tk.Scrollbar(text_frame, orient=tk.VERTICAL)
 
