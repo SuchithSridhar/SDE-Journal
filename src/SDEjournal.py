@@ -132,7 +132,10 @@ class MainApp(SDE_Root):
             # actual window size remained big
             return None
 
-        self.frames[self.current_frame].resize_widgets(w, h)
+        try:
+            self.frames[self.current_frame].resize_widgets(w, h)
+        except KeyError:
+            pass
 
 
 class IntroPage(tk.Frame):
@@ -146,7 +149,7 @@ class IntroPage(tk.Frame):
         self.main_frame = main_frame
 
         root.geometry("300x150")
-        root.resizable(False, False)
+        root.resizable(True, True)
         root.set_window()
 
         root.style = ttk.Style()
