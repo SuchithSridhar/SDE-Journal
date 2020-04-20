@@ -20,7 +20,7 @@ class FakeEvent:
 
 
 class SDE_Window:
-    ''' This class is not to create objects but
+    ''' This class is not to create objects but 
     only to be inherited. It defines functions common
     to Root windows and Toplevel windows'''
 
