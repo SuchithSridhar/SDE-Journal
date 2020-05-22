@@ -1,7 +1,8 @@
 def encrypt(data, code):
+    code = int(code)
     data = bytearray(data)
     for index, value in enumerate(data):
-        data[index] = value ^ code
+        data[index] = value ^ 10
     return data
 
 

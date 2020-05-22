@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Journal SDE
+Comment=A simple journaling application based on python and tk
+Exec=OpenSDE.sh
+Icon=/home/suchi/.local/share/applications/Diary_icon.png
+Terminal=False

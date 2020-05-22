@@ -2,6 +2,8 @@ import io
 import tkinter as tk
 from . import foldermanager as fm
 from . import SDEImageCipher
+from PIL import Image
+from PIL import ImageTk
 
 
 class Canvas:

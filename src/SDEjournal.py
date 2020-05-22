@@ -20,7 +20,7 @@ class FakeEvent:
 
 
 class SDE_Window:
-    ''' This class is not to create objects but 
+    ''' This class is not to create objects but
     only to be inherited. It defines functions common
     to Root windows and Toplevel windows'''
 
@@ -223,6 +223,7 @@ class IntroPage(tk.Frame):
             self.root.pop_up("Close", "Unable to check password.")
         else:
             self.root.show_frame(MainPage)
+            self.root.code = self.root.user.code
             logger.log("User Successful login")
 
     def sign_up(self):
@@ -300,7 +301,7 @@ class MainPage(tk.Frame):
 
         text_frame = tk.Frame(self, bg=const.BASE_COLOR)
         pics_frame = tk.Frame(self, bg=const.BASE_COLOR)
-        pictures = PicturesPage.Pictures(pics_frame, self.root.code)
+        pictures = PicturesPage.Pictures(pics_frame, self.root.user.code)
 
         s = tk.Scrollbar(text_frame, orient=tk.VERTICAL)
 
@@ -816,7 +817,7 @@ class OptionsPage(tk.Frame):
             new_user = userClass.User()
 
             def button_func():
-                new_username_str = str(new_username.get())
+                new_username_str = str(new_user.name_var.get())
                 new_user.code_var.set("1978")
                 new_user.update()
                 # the code does not matter, just has to be valid
@@ -870,7 +871,7 @@ class OptionsPage(tk.Frame):
                     # The Username does'nt matter its just
                     # to validate the password
                     if old_user.password_check():
-                        if new_user_validate_values():
+                        if new_user.validate_values():
                             cont = True
 
                 if cont:
