@@ -994,7 +994,7 @@ class OptionsPage(tk.Frame):
         for i in range(a):
             button = self.widgets["OPTS_BUTS"][i]
             label = self.widgets["OPTS_TEXTS"][i]
-            y = 100 + (i * h // 8.5)
+            y = ((1+i) * h // 8.5) + 10
             f1 = (
                 const.OPTS_LABEL_FONT[0],
                 int(const.OPTS_LABEL_FONT[1] *
