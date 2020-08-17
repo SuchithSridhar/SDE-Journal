@@ -16,6 +16,7 @@ FONT_BOLD = ("Verdana bold", 12)
 
 
 DATE_FONT = ("Verdana", 17)
+PICS_OPTIONS_FONT = DATE_FONT
 
 TEXT_BOX_FONT = FONT
 OPTS_FONT = ("Verdana bold", 30)
