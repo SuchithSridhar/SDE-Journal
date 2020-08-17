@@ -821,7 +821,7 @@ class OptionsPage(tk.Frame):
                 new_user.update()
                 # the code does not matter, just has to be valid
                 try:
-                    new_user.validate_values():
+                    new_user.validate_values()
                 except Exception as e:
                     print(e)
                     print(e.__traceback__)
