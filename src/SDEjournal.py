@@ -1,3 +1,4 @@
+
 import os
 import time
 import pickle
@@ -131,8 +132,10 @@ class MainApp(SDE_Root):
             # becoming very low numbers even though the
             # actual window size remained big
             return None
-
-        self.frames[self.current_frame].resize_widgets(w, h)
+        try:
+            self.frames[self.current_frame].resize_widgets(w, h)
+        except KeyError:
+            pass
 
 
 class IntroPage(tk.Frame):
@@ -146,7 +149,7 @@ class IntroPage(tk.Frame):
         self.main_frame = main_frame
 
         root.geometry("300x150")
-        root.resizable(False, False)
+        root.resizable(True, True)
         root.set_window()
 
         root.style = ttk.Style()
@@ -746,25 +749,31 @@ class OptionsPage(tk.Frame):
                 new_user.code_var.set("1978")
                 new_user.update()
                 # the code does not matter, just has to be valid
-                if new_user.validate_values():
-                    cur_path = os.getcwd()
-                    os.chdir("../")
-                    if not sde_utils.check_folder(new_user.foldername):
-                        os.chdir(cur_path)
-                        Change_pass_user.change_username(
-                            new_user.foldername,
-                            self.root.user.name
-                        )
-                        logger.log("Changed the user name")
+                try:
+                    new_user.validate_values():
+                except Exception as e:
+                    print(e)
+                    print(e.__traceback__)
+                    return
 
-                        self.root.user.name_var = new_user.name_var.get()
-                        self.root.user.update()
+                cur_path = os.getcwd()
+                os.chdir("../")
+                if not sde_utils.check_folder(new_user.foldername):
+                    os.chdir(cur_path)
+                    Change_pass_user.change_username(
+                        new_user.foldername,
+                        self.root.user.name
+                    )
+                    logger.log("Changed the user name")
 
-                        win_pop.destroy()
-                        self.root.pop_up("Done", label="")
-                    else:
-                        os.chdir(cur_path)
-                        self.root.pop_up("Close", "User Already Exist")
+                    self.root.user.name_var = new_user.name_var.get()
+                    self.root.user.update()
+
+                    win_pop.destroy()
+                    self.root.pop_up("Done", label="")
+                else:
+                    os.chdir(cur_path)
+                    self.root.pop_up("Close", "User Already Exist")
 
             win_pop = SDE_TopLevel(self)
             win_pop.geometry('400x100')
@@ -792,12 +801,15 @@ class OptionsPage(tk.Frame):
                 old_user.name_var.set("TestUser")
                 new_user.update()
                 old_user.update()
-                if old_user.validate_values():
-                    # The Username does'nt matter its just
-                    # to validate the password
-                    if old_user.password_check():
-                        if new_user_validate_values():
-                            cont = True
+
+                try:
+                    old_user.validate_values()
+                    old_user.password_check()
+                    new_user.validate_values()
+                    cont = True
+                except Exception as e:
+                    print(e)
+                    print(e.__traceback__)
 
                 if cont:
                     pop_up = SDE_TopLevel(window_pop)
@@ -919,7 +931,7 @@ class OptionsPage(tk.Frame):
         for i in range(a):
             button = self.widgets["OPTS_BUTS"][i]
             label = self.widgets["OPTS_TEXTS"][i]
-            y = 100 + (i * h // 8.5)
+            y = ((i+1) * h // 8.5) + 10
             f1 = (
                 const.OPTS_LABEL_FONT[0],
                 int(const.OPTS_LABEL_FONT[1] *
