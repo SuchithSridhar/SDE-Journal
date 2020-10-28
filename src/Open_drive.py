@@ -1,40 +1,23 @@
 import webbrowser
-from zipfile import ZipFile
 import os
 import subprocess
 import sys
 import time
+import shutil
 
 
-def zip_files(zip_file_name, file_paths):
-    if ".zip" != zip_file_name[-4:]:
-        zip_file_name += ".zip"
-
-    try:
-        with ZipFile(zip_file_name, 'w') as zipping:
-            for file in file_paths:
-                zipping.write(file)
-    except Exception as e:
-        # print("------- Exception while zipping !\n\n\n")
-        raise e
+def zip_files(zip_file_name, folderPath):
+    shutil.make_archive(zip_file_name, 'zip', folderPath)
 
 
 def open_drive():
     url = r'https://drive.google.com/drive/my-drive'
-    chrome_app = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-    chrome_path = ('C:/Program Files (x86)/Google/Chrome/Application\
-        /chrome.exe %s --incognito')
-    if os.path.isfile(chrome_app):
-        webbrowser.get(chrome_path).open_new(url)
-    else:
-        webbrowser.open_new(url)
+    webbrowser.open_new(url)
 
 
-def save_to_drive():
+def save_to_drive(pathToFolder):
     dirname = "ZipBackup"
-    original_path = os.getcwd()
-
-    files = os.listdir()
+    files = os.listdir(pathToFolder)
     zipping = []
     for file in files:
         if file[-4:] == ".SDE":
